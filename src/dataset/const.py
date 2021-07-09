@@ -45,6 +45,7 @@ META_TARGET_FORMAT = ["Constant", "Progression", "Arithmetic", "Distribute_Three
 META_STRUCTURE_FORMAT = ["Singleton", "Left_Right", "Up_Down", "Out_In", "Left", "Right", "Up", "Down", "Out", "In", "Grid", "Center_Single", "Distribute_Four", "Distribute_Nine", "Left_Center_Single", "Right_Center_Single", "Up_Center_Single", "Down_Center_Single", "Out_Center_Single", "In_Center_Single", "In_Distribute_Four"]
 
 # Rule, Attr, Param
+
 # The design encodes rule priority order: Number/Position always comes first
 # Number and Position could not both be sampled
 # Progression on Number: Number on each Panel +1/2 or -1/2
@@ -54,17 +55,24 @@ META_STRUCTURE_FORMAT = ["Singleton", "Left_Right", "Up_Down", "Out_In", "Left",
 # Distribute_Three on Number: Three numbers through each row
 # Distribute_Three on Position: Three positions (same number) through each row
 # Constant on Number/Position: Nothing changes
+
+# Then it comes type:
 # Progression on Type: Type progression defined as the number of edges on each entity (Triangle, Square, Pentagon, Hexagon, Circle)
 # Distribute_Three on Type: Three types through each row
 # Constant on Type: Nothing changes
+
+# Then size:
 # Progression on Size: Size on each entity +1/2 or -1/2
 # Arithmetic on Size: Size on the third Panel = Size on the first +/- Size on the second (1 for + and -1 for -)
 # Distribute_Three on Size: Three sizes through each row
 # Constant on Size: Nothing changes
+
+# Then color:
 # Progression on Color: Color +1/2 or -1/2
 # Arithmetic on Color: Color on the third Panel = Color on the first +/- Color on the second (1 for + and -1 for -)
 # Distribute_Three on Color: Three colors through each row
 # Constant on Color: Nothing changes
+
 # Note that all rules on Type, Size and Color enforce value consistency in a panel
 RULE_ATTR = [[["Progression", "Number", [-2, -1, 1, 2]], 
               ["Progression", "Position", [-2, -1, 1, 2]], 

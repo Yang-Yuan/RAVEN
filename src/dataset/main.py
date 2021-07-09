@@ -136,7 +136,7 @@ def fuse(args, all_configs):
         answers = []
         for candidate in candidates:
             answers.append(render_panel(candidate))
-        # imsave(generate_matrix_answer(imgs + answers), "./experiments/fuse/{}.jpg".format(k))
+        imsave(generate_matrix_answer(imgs + answers), "./experiments/fuse/{}.jpg".format(k))
 
         image = imgs[0:8] + answers
         target = candidates.index(answer_AoT)
@@ -264,7 +264,7 @@ def separate(args, all_configs):
             answers = []
             for candidate in candidates:
                 answers.append(render_panel(candidate))
-            # imsave(generate_matrix_answer(imgs + answers), "./experiments/{}/{}.jpg".format(key, k))    
+            imsave(generate_matrix_answer(imgs + answers), "./experiments/{}/{}.jpg".format(key, k))
             
             image = imgs[0:8] + answers
             target = candidates.index(answer_AoT)
