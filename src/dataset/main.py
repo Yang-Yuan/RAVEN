@@ -250,6 +250,11 @@ def separate(args, all_configs):
                     render_panel(row_3_1),
                     render_panel(row_3_2),
                     np.zeros((IMAGE_SIZE, IMAGE_SIZE), np.uint8)]
+
+            imgs_matrices = copy.deepcopy(imgs)
+            imgs_matrices[-1] = render_panel(row_3_3)
+            imsave(generate_matrix(imgs_matrices), "./experiments/{}/{}_mtrx.jpg".format(key, k))
+
             context = [row_1_1, row_1_2, row_1_3, row_2_1, row_2_2, row_2_3, row_3_1, row_3_2]
             modifiable_attr = sample_attr_avail(rule_groups, row_3_3)
             answer_AoT = copy.deepcopy(row_3_3)

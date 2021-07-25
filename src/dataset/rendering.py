@@ -90,10 +90,10 @@ def render_structure(structure_name):
     ret = None
     if structure_name == "Left_Right":
         ret = np.zeros((IMAGE_SIZE, IMAGE_SIZE), np.uint8)
-        ret[:, int(0.5 * IMAGE_SIZE)] = 255.0
+        # ret[:, int(0.5 * IMAGE_SIZE)] = 255.0
     elif structure_name == "Up_Down":
         ret = np.zeros((IMAGE_SIZE, IMAGE_SIZE), np.uint8)
-        ret[int(0.5 * IMAGE_SIZE), :] = 255.0
+        # ret[int(0.5 * IMAGE_SIZE), :] = 255.0
     else:
         ret = np.zeros((IMAGE_SIZE, IMAGE_SIZE), np.uint8)
     return ret
