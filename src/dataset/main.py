@@ -186,8 +186,25 @@ def separate(args, all_configs):
             for l in range(len(rule_groups)):
                 rule_group = rule_groups[l]
                 rule_num_pos = rule_group[0]
+
+                # BUG: when the uniformity of the layout node is false,
+                # every entity would be sampled separately for the entity attributes (type, size and color).
+                # Thus, the entities in different entries have different entity attributes.
+                # If there exists a constant rule on type, size or color, it would be violated,
+                # because the ``apply_rule'' method of the constant rule simply returns the input second
+                # argument, but does not check if the first and second are constant on this attribute,
+                # and correct them if not constant if possible.
                 row_1_2 = rule_num_pos.apply_rule(row_1_1)
                 row_1_3 = rule_num_pos.apply_rule(row_1_2)
+                # However, in some cases, it is impossible to not violate the constant rule. For example,
+                # when the number or position are varied in layout node, and thus no obvious correspondence
+                # between entities in different entries, you don't know which one is constant with which one.
+                # In this case, the constant rules are not effective. They should be at least deleted from
+                # the symbolic labels (see the xml files).
+                # So, when the number and position are constant, there indeed exists obvious entity correspondence
+                # across entries, the damage to the constant caused by resampling according to uniformity
+                # should be restored in the ``apply_rule'' method of constant rule.
+
                 for i in range(1, len(rule_group)):
                     rule = rule_group[i]
                     row_1_2 = rule.apply_rule(row_1_1, row_1_2)
