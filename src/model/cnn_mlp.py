@@ -63,11 +63,15 @@ class CNN_MLP(BasicModel):
         return loss
 
     def forward(self, x, embedding, indicator):
-        alpha = 1.0
-        features = self.conv(x.view(-1, 16, 80, 80))
+
+        features = self.conv(x)
         features_tree = features.view(-1, 1, 512)
         features_tree = self.fc_tree_net(features_tree, embedding, indicator)
-        final_features = features + alpha * features_tree
+
+        # alpha = 1.0
+        # final_features = features + alpha * features_tree
+        final_features = features + features_tree
+
         score = self.mlp(final_features)
         return score, None
 

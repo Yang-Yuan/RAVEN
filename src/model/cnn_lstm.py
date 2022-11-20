@@ -62,11 +62,15 @@ class CNN_LSTM(BasicModel):
         return loss
 
     def forward(self, x, embedding, indicator):
-        alpha = 1.0
-        features = self.conv(x.view(-1, 1, 80, 80))
+
+        features = self.conv(x)
         features_tree = self.fc_tree_net(features, embedding, indicator)
         features_tree = features_tree.view(-1, 16, 256)
-        final_features = features + alpha * features_tree
+
+        # alpha = 1.0
+        # final_features = features + alpha * features_tree
+        final_features = features + features_tree
+
         score = self.lstm(final_features)
         return score, None
 

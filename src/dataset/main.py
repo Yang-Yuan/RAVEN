@@ -268,9 +268,9 @@ def separate(args, all_configs):
                     render_panel(row_3_2),
                     np.zeros((IMAGE_SIZE, IMAGE_SIZE), np.uint8)]
 
-            imgs_matrices = copy.deepcopy(imgs)
-            imgs_matrices[-1] = render_panel(row_3_3)
-            imsave(generate_matrix(imgs_matrices), "./experiments/{}/{}_mtrx.jpg".format(key, k))
+            # imgs_matrices = copy.deepcopy(imgs)
+            # imgs_matrices[-1] = render_panel(row_3_3)
+            # imsave(generate_matrix(imgs_matrices), "{}/{}/RAVEN_{}_{}_matrix.jpg".format(args.save_dir, key, k, set_name))
 
             context = [row_1_1, row_1_2, row_1_3, row_2_1, row_2_2, row_2_3, row_3_1, row_3_2]
             modifiable_attr = sample_attr_avail(rule_groups, row_3_3)
@@ -286,7 +286,7 @@ def separate(args, all_configs):
             answers = []
             for candidate in candidates:
                 answers.append(render_panel(candidate))
-            imsave(generate_matrix_answer(imgs + answers), "./experiments/{}/{}.jpg".format(key, k))
+            imsave(generate_matrix_answer(imgs + answers), "{}/{}/RAVEN_{}_{}.jpg".format(args.save_dir, key, k, set_name))
             
             image = imgs[0:8] + answers
             target = candidates.index(answer_AoT)
@@ -311,7 +311,7 @@ def separate(args, all_configs):
 
 def main():
     main_arg_parser = argparse.ArgumentParser(description="parser for RAVEN")
-    main_arg_parser.add_argument("--num-samples", type=int, default=20000,
+    main_arg_parser.add_argument("--num-samples", type=int, default=10000,
                                  help="number of samples for each component configuration")
     main_arg_parser.add_argument("--save-dir", type=str, default="~/Datasets/",
                                  help="path to folder where the generated dataset will be saved.")

@@ -61,11 +61,16 @@ class Resnet18_MLP(BasicModel):
         return loss
 
     def forward(self, x, embedding, indicator):
-        alpha = 1.0
-        features = self.resnet18(x.view(-1, 16, 224, 224))
+
+        # features = self.resnet18(x.view(-1, 16, 224, 224))
+        features = self.resnet18(x)
         features_tree = features.view(-1, 1, 512)
         features_tree = self.fc_tree_net(features_tree, embedding, indicator)
-        final_features = features + alpha * features_tree
+
+        # alpha = 1.0
+        # final_features = features + alpha * features_tree
+        final_features = features + features_tree
+
         output = self.mlp(final_features)
         pred = output[:,0:8]
         meta_target_pred = output[:,8:17]

@@ -8,28 +8,29 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 
-from utility import dataset, ToTensor
+from utility.dataset_utility import dataset, ToTensor
 from cnn_mlp import CNN_MLP
 from cnn_lstm import CNN_LSTM
 from resnet18 import Resnet18_MLP
 
-parser = argparse.ArgumentParser(description='our_model')
-parser.add_argument('--model', type=str, default='Resnet18_MLP')
-parser.add_argument('--epochs', type=int, default=200)
-parser.add_argument('--batch_size', type=int, default=32)
-parser.add_argument('--seed', type=int, default=12345)
+parser = argparse.ArgumentParser(description='drt-baseline')
+parser.add_argument('--model', type=str, default='CNN-MLP')
+parser.add_argument('--epochs', type=int, default=3)
+parser.add_argument('--batch_size', type=int, default=4)
+parser.add_argument('--seed', type=int, default=1234)
 parser.add_argument('--device', type=int, default=0)
-parser.add_argument('--load_workers', type=int, default=16)
+parser.add_argument('--workers', type=int, default=0)
 parser.add_argument('--resume', type=bool, default=False)
-parser.add_argument('--path', type=str, default='/home/chizhang/Datasets/RAVEN-10000/')
-parser.add_argument('--save', type=str, default='./experiments/checkpoint/')
-parser.add_argument('--img_size', type=int, default=224)
+parser.add_argument('--path', type=str, default='C:/statuette-data/RAVEN-7W/')
+parser.add_argument('--save', type=str, default='./results/checkpoints/')
+parser.add_argument('--log', type=str, default='./results/log/')
+parser.add_argument('--img_size', type=int, default=80)
 parser.add_argument('--lr', type=float, default=1e-4)
 parser.add_argument('--beta1', type=float, default=0.9)
 parser.add_argument('--beta2', type=float, default=0.999)
 parser.add_argument('--epsilon', type=float, default=1e-8)
 parser.add_argument('--meta_alpha', type=float, default=0.0)
-parser.add_argument('--meta_beta', type=float, default=0.0)
+parser.add_argument('--meta_beta', type=float, default=10.0)
 
 
 args = parser.parse_args()
@@ -41,26 +42,38 @@ if args.cuda:
 if not os.path.exists(args.save):
     os.makedirs(args.save)
 
-train = dataset(args.path, "train", args.img_size, transform=transforms.Compose([ToTensor()]))
-valid = dataset(args.path, "val", args.img_size, transform=transforms.Compose([ToTensor()]))
-test = dataset(args.path, "test", args.img_size, transform=transforms.Compose([ToTensor()]))
+train_set = dataset(args.path, "train", args.img_size, transform=transforms.Compose([ToTensor()]))
+valid_set = dataset(args.path, "val", args.img_size, transform=transforms.Compose([ToTensor()]))
+test_set = dataset(args.path, "test", args.img_size, transform=transforms.Compose([ToTensor()]))
 
-trainloader = DataLoader(train, batch_size=args.batch_size, shuffle=True, num_workers=16)
-validloader = DataLoader(valid, batch_size=args.batch_size, shuffle=False, num_workers=16)
-testloader = DataLoader(test, batch_size=args.batch_size, shuffle=False, num_workers=16)
+trainloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=args.workers)
+validloader = DataLoader(valid_set, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
+testloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
-if args.model == "CNN_MLP":
+
+model = None
+if "CNN-MLP" == args.model:
     model = CNN_MLP(args)
-elif args.model == "CNN_LSTM":
-    model = CNN_LSTM(args)
-elif args.model == "Resnet18_MLP":
+elif "ResNet" == args.model:
     model = Resnet18_MLP(args)
-    
+elif "LSTM" == args.model:
+    model = CNN_LSTM(args)
+elif "WReN" == args.model:
+    pass
+elif "Wild-ResNet" == args.model:
+    pass
+elif "Context-Blind-ResNet":
+    pass
+else:
+    raise ValueError("Unknow Model.")
+
 if args.resume:
     model.load_model(args.save, 0)
     print('Loaded model')
+
 if args.cuda:
     model = model.cuda()
+
 
 def train(epoch):
     model.train()

@@ -1,5 +1,11 @@
 # RAVEN
 
+
+<span style="color:red;font-weight:700;font-size:20px">
+Warning: the data generation must be run in python 2.7 now. I will try to move it to python 3 later. 
+</span>
+
+
 This repo contains code for our CVPR 2019 paper.
 
 [RAVEN: A Dataset for <u>R</u>elational and <u>A</u>nalogical <u>V</u>isual r<u>E</u>aso<u>N</u>ing](http://wellyzhang.github.io/attach/cvpr19zhang.pdf)  
