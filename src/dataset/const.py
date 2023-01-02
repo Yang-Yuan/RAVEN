@@ -17,7 +17,7 @@ NUM_MIN = 0
 NUM_MAX = len(NUM_VALUES) - 1
 
 # Uniformity
-UNI_VALUES = [False, False, False, False]
+UNI_VALUES = [False, False, False, True]
 UNI_MIN = 0
 UNI_MAX = len(UNI_VALUES) - 1
 
