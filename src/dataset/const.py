@@ -17,7 +17,7 @@ NUM_MIN = 0
 NUM_MAX = len(NUM_VALUES) - 1
 
 # Uniformity
-UNI_VALUES = [False, False, False, True]
+UNI_VALUES = [False, False, False, False]
 UNI_MIN = 0
 UNI_MAX = len(UNI_VALUES) - 1
 
@@ -81,14 +81,14 @@ RULE_ATTR = [[["Progression", "Number", [-2, -1, 1, 2]],
               ["Distribute_Three", "Number", None],
               ["Distribute_Three", "Position", None],
               ["Constant", "Number/Position", None]],
-             [["Progression", "Type", [-2, -1, 1, 2]],
-              ["Distribute_Three", "Type", None], 
-              ["Constant", "Type", None]],
-             [["Progression", "Size", [-2, -1, 1, 2]],
+             [["Constant", "Type", None],
+              ["Progression", "Type", [-2, -1, 1, 2]],
+              ["Distribute_Three", "Type", None]],
+             [["Constant", "Size", None],
               ["Arithmetic", "Size", [1, -1]],
               ["Distribute_Three", "Size", None],
-              ["Constant", "Size", None]],
-             [["Progression", "Color", [-2, -1, 1, 2]],
+              ["Progression", "Size", [-2, -1, 1, 2]]],
+             [["Constant", "Color", None],
               ["Arithmetic", "Color", [1, -1]],
               ["Distribute_Three", "Color", None],
-              ["Constant", "Color", None]]]
+              ["Progression", "Color", [-2, -1, 1, 2]]]]

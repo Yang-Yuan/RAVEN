@@ -33,23 +33,29 @@ def sample_attr_avail(rule_groups, row_3_3):
     """
     ret = []
     for i in range(len(rule_groups)):
-        rule_group = rule_groups[i]
+
+        # this is not start_node_layout, but under the current implementation
+        # they should be the same
         start_node_layout = row_3_3.children[0].children[i].children[0]
+        most_num = len(start_node_layout.position.values)
+
         row_3_3_layout = row_3_3.children[0].children[i].children[0]
         uni = row_3_3_layout.uniformity.get_value()
+        num = row_3_3_layout.number.get_value()
+
+        rule_group = rule_groups[i]
+        num_pos_rule = rule_group[0]
+
         # Number/Position
         # If Rule on Number: Only change Number
         # If Rule on Position: Both Number and Position could be changed
-        rule = rule_group[0]
-        num = row_3_3_layout.number.get_value()
-        most_num = len(start_node_layout.position.values)
-        if rule.attr == "Number":
+        if num_pos_rule.attr == "Number":
             num_times = 0
             min_level = start_node_layout.orig_layout_constraint["Number"][0]
             max_level = start_node_layout.orig_layout_constraint["Number"][1]
             for k in range(min_level, max_level + 1):
                 if k + 1 != num:
-                    num_times += comb(most_num, k + 1)
+                    num_times += comb(most_num, k + 1)  # for a number of entities, they can be placed at different positions
             if num_times > 0:
                 ret.append([i, "Number", num_times, min_level, max_level])
         # Constant or on Position
@@ -62,10 +68,12 @@ def sample_attr_avail(rule_groups, row_3_3):
                     num_times += comb(most_num, k + 1)
             if num_times > 0:
                 ret.append([i, "Number", num_times, min_level, max_level])
-            pos_times = comb(most_num, row_3_3_layout.number.get_value())
+
+            pos_times = comb(most_num, num)
             pos_times -= 1
             if pos_times > 0:
                 ret.append([i, "Position", pos_times, None, None])
+
         # Type, Size, Color
         for j in range(1, len(rule_group)):
             rule = rule_group[j]
@@ -73,9 +81,20 @@ def sample_attr_avail(rule_groups, row_3_3):
             min_level = start_node_layout.orig_entity_constraint[rule_attr][0]
             max_level = start_node_layout.orig_entity_constraint[rule_attr][1] 
             if rule.name == "Constant":
-                if uni or rule_group[0].name == "Constant" or \
-                          (rule_group[0].attr == "Position" and 
-                          (rule_group[0].name == "Progression" or rule_group[0].name == "Distribute_Three")):
+
+                # Given the current implementation of creating start_node and applying rules incrementally,
+                # the constant rules on type, size, and color will not be effective in all cases.
+                # In particular, the constant rule will take effect, when
+                # (1) uni == True.
+                #     When uni==False and num_pos_rule is not constant, this rule will resample each entity in each panel individually,
+                #     thus being different. Then, when it is applying the constant rules on type, size, and color, this rule simply
+                #     returns the input panel.
+                # (2) When uni == False, num_pos_rule has to be constant for constant rules on type, size, and color to work.
+                #     This is also because of the current implementation of constant rule.
+                # (3) When both the above two points are not satisfied, the progression and distribute_three on position will not resample entities.
+                if uni or num_pos_rule.name == "Constant" or \
+                        (rule_group[0].attr == "Position" and
+                         (rule_group[0].name == "Progression" or rule_group[0].name == "Distribute_Three")):
                     times = max_level - min_level + 1
                     times = times - 1
                     if times > 0:
